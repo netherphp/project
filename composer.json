@@ -12,6 +12,11 @@
 	"require":{
 		"php": ">=5.4.0"
 	},
+	"suggest":{
+		"netherphp/world": "Includes all the things real boot a full project in the Nether. If you require this you can ignore the other suggestions as they will be there.",
+		"netherphp/avenue": "Allows this to setup simple request routing/controllers for you.",
+		"netherphp/surface": "Allows this to setup the theme engine with a simple default theme for you."
+	},
 	"require-dev":{ },
 	"autoload":{
 		"psr-0": {
