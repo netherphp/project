@@ -54,9 +54,10 @@ class Option {
 		echo "   Enter dash (-) to skip.", PHP_EOL;
 		echo "   [{$this->DefaultValue}]: ";
 
+		if(!defined('NETHER_PROJECT_ACCEPT_DEFAULTS'))
 		$value = trim(fgets(STDIN));
 
-		if(!$value) {
+		if(defined('NETHER_PROJECT_ACCEPT_DEFAULTS') || !$value) {
 			$this->Value = $this->DefaultValue;
 		} elseif($value === '-') {
 			$this->Use = false;

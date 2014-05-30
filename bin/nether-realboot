@@ -8,6 +8,16 @@ require(sprintf(
 	dirname(dirname(dirname(dirname(__FILE__))))
 ));
 
+{{{
+	$opts = getopt(null,[
+		"defaults::"
+	]);
+
+	if(array_key_exists('defaults',$opts))
+	define('NETHER_PROJECT_ACCEPT_DEFAULTS',true);
+}}}
+
+
 $realbooter = new Nether\Project\RealBooter;
 $realbooter->Begin();
 

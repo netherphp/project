@@ -32,6 +32,7 @@ class RealBooter {
 
 	public function AddConfigOption($option) {
 		if(!$option->Use) return;
+
 		$this->Config[$option->Name] = $option;
 		return;
 	}
@@ -103,7 +104,8 @@ class RealBooter {
 			echo " - {$option->Name} = {$option->Value}", PHP_EOL;
 		}
 
-		return self::QueryYesOrNo();
+		if(defined('NETHER_PROJECT_ACCEPT_DEFAULTS')) return true;
+		else return self::QueryYesOrNo();
 	}
 
 	public function Execute() {

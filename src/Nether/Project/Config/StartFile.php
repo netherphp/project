@@ -29,6 +29,9 @@ class StartFile extends Option {
 			if($this->GenerateNetherOption($realbooter))
 			$this->GenerateCommentBar();
 
+			if($this->GenerateNetherLoaders($realbooter))
+			$this->GenerateCommentBar();
+
 			echo PHP_EOL;
 		}}} $startdata = ob_get_clean();
 
@@ -113,6 +116,32 @@ class StartFile extends Option {
 		echo PHP_EOL;
 
 		return true;
+	}
+
+	protected function GenerateNetherLoaders($realbooter) {
+	/*//
+	generate the calls to prompt any nether loading.
+	//*/
+
+		$anything = false;
+
+		if(array_key_exists('NetherSurface',$realbooter->Config)) {
+			$anything = true;
+			echo "new Nether\Surface;", PHP_EOL;
+		}
+
+		if(array_key_exists('NetherCache',$realbooter->Config)) {
+			$anything = true;
+			echo "new Nether\Cache;", PHP_EOL;
+		}
+
+		if($anything) {
+			echo PHP_EOL;
+			return true;
+		} else {
+			return false;
+		}
+
 	}
 
 }
