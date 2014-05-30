@@ -58,6 +58,24 @@ $realbooter->AddConfigOption(new Nether\Project\Config\StartFile(
 	"Would you like me to generate a {$realbooter->Config['ConfigDirectory']->Value}/start.php file for you? This file will contain the includes for composer, the PROJECT_ROOT constant, and some default settings you can tweak later. You be able to include this one file in all your scripts and get to work with your entire framework with all its settings easily. As your application grows you can modify it to handle all your bootstrapping needs. Enter y or n."
 ));
 
+if(array_key_exists('StartFile',$realbooter->Config) && array_key_exists('WebDirectory',$realbooter->Config) && class_exists('Nether\\Avenue'))
+$realbooter->AddConfigOption(new Nether\Project\Config\Option(
+	'NetherAvenue', 'y',
+	"I've detected you have Nether Avenue installed. Would you like me to create the default {$realbooter->Config['WebDirectory']->Value}/index.php file and default route settings for you? This will allow you to get rolling with creating Routes/Controllers really fast."
+));
+
+if(array_key_exists('StartFile',$realbooter->Config) && array_key_exists('WebDirectory',$realbooter->Config) && class_exists('Nether\\Surface'))
+$realbooter->AddConfigOption(new Nether\Project\Config\Option(
+	'NetherSurface', 'y',
+	"I've detected you have Nether Surface installed. Would you like me to drop in the really boring default theme and setup the Surface theme engine so that you can build complete pages really fast? At that point, all you will have to do is edit the theme to look how you want."
+));
+
+if(array_key_exists('StartFile',$realbooter->Config) && class_exists('Nether\\Cache'))
+$realbooter->AddConfigOption(new Nether\Project\Config\Option(
+	'NetherCache', 'y',
+	"I've detected you have Nether Cache installed. Would you like me to activate it in the StartFile so you can access it right off the bat?"
+));
+
 if($realbooter->Confirm()) {
 	$realbooter->Execute();
 	$realbooter->Save();
