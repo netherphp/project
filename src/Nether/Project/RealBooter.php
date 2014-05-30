@@ -24,7 +24,6 @@ class RealBooter {
 
 	public function __construct() {
 		$this->ProjectRoot = getcwd();
-
 		return;
 	}
 
@@ -33,9 +32,7 @@ class RealBooter {
 
 	public function AddConfigOption($option) {
 		if(!$option->Use) return;
-
 		$this->Config[$option->Name] = $option;
-
 		return;
 	}
 
@@ -51,19 +48,31 @@ class RealBooter {
 	////////////////
 	////////////////
 
-	public function Welcome() {
-
+	public function Begin() {
 		echo PHP_EOL;
 		echo "Nether Real Booting Agent", PHP_EOL;
 		echo "ProjectRoot: {$this->ProjectRoot}", PHP_EOL, PHP_EOL;
 		echo "Hit enter to continue.", PHP_EOL;
 		fgets(STDIN);
+		return;
+	}
 
+	public function End() {
+		echo PHP_EOL;
+		echo "Done.", PHP_EOL, PHP_EOL;
+		echo wordwrap("If you specified any autoloading namespaces you need to run composer dump-autoload to have it regenerate its magic stuff. Depending on your system can do that a few ways. Choose the way that is most like how you installed Nether to begin with.",70), PHP_EOL, PHP_EOL;
+		echo "   * php composer.phar dump-autoload", PHP_EOL;
+		echo "   * composer dump-autoload", PHP_EOL;
+		return;
+	}
+
+	public function Aborted() {
+		echo PHP_EOL;
+		echo "Aborted.", PHP_EOL, PHP_EOL;
 		return;
 	}
 
 	public function Confirm() {
-
 		echo PHP_EOL;
 		echo "Run with these settings?", PHP_EOL;
 
@@ -72,8 +81,8 @@ class RealBooter {
 		}
 
 		echo PHP_EOL;
-
 		$response = false;
+
 		while(!$response) {
 			echo "[y/n]: ";
 			$response = trim(fgets(STDIN));
@@ -85,6 +94,7 @@ class RealBooter {
 
 	public function Execute() {
 		reset($this->Config);
+		echo PHP_EOL;
 
 		foreach($this->Config as $option) {
 			$option->Execute($this);

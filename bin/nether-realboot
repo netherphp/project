@@ -9,7 +9,7 @@ require(sprintf(
 ));
 
 $realbooter = new Nether\Project\RealBooter;
-$realbooter->Welcome();
+$realbooter->Begin();
 
 $realbooter->AddConfigOption(new Nether\Project\Config\Directory(
 	'AutoloadDirectory', 'core',
@@ -54,4 +54,7 @@ $realbooter->AddConfigOption(new Nether\Project\Config\Directory(
 
 if($realbooter->Confirm()) {
 	$realbooter->Execute();
+	$realbooter->End();
+} else {
+	$realbooter->Aborted();
 }
