@@ -1,0 +1,22 @@
+{
+	"name":"netherphp/project",
+	"description":"Utilities (CLI) for project management.",
+	"keywords":["php","project"],
+	"license":"BSD-2-Clause",
+	"authors":[
+		{	"name":"Bob Majdak Jr",
+			"email":"bob@nether.io",
+			"homepage":"http://nether.io",
+			"role":"developer" }
+	],
+	"require":{
+		"php": ">=5.4.0"
+	},
+	"require-dev":{ },
+	"autoload":{
+		"psr-0": {
+			"Nether\\": "src/"
+		}
+	},
+	"bin": ["bin/nether-realboot.php"]
+}
