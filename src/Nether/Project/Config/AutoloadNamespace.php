@@ -22,6 +22,11 @@ class AutoloadNamespace extends Option {
 			else $namespaces[$key] = $ns;
 		}
 
+		// add the default Nether Avenue namespace if enabled.
+		if(array_key_exists('NetherAvenue',$realbooter->Config)) {
+			$namespaces[] = 'Routes';
+		}
+
 		// find the composer file.
 		$composerfile = $realbooter->GetFullPathTo('composer.json');
 

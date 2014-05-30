@@ -3,6 +3,12 @@
 ini_set('display_errors',true);
 error_reporting(E_ALL);
 
+// just for the record, i have never written a file with lines this long ever
+// in my life until now, lol.
+// - bob
+
+define('APP_ROOT',dirname(dirname(__FILE__)));
+
 require(sprintf(
 	'%s/autoload.php',
 	dirname(dirname(dirname(dirname(__FILE__))))
@@ -10,13 +16,13 @@ require(sprintf(
 
 {{{
 	$opts = getopt(null,[
-		"defaults::"
+		"defaults::",
+		"bare::"
 	]);
 
 	if(array_key_exists('defaults',$opts))
 	define('NETHER_PROJECT_ACCEPT_DEFAULTS',true);
 }}}
-
 
 $realbooter = new Nether\Project\RealBooter;
 $realbooter->Begin();
@@ -68,14 +74,14 @@ $realbooter->AddConfigOption(new Nether\Project\Config\StartFile(
 	"Would you like me to generate a {$realbooter->Config['ConfigDirectory']->Value}/start.php file for you? This file will contain the includes for composer, the PROJECT_ROOT constant, and some default settings you can tweak later. You be able to include this one file in all your scripts and get to work with your entire framework with all its settings easily. As your application grows you can modify it to handle all your bootstrapping needs. Enter y or n."
 ));
 
-if(array_key_exists('StartFile',$realbooter->Config) && array_key_exists('WebDirectory',$realbooter->Config) && class_exists('Nether\\Avenue'))
-$realbooter->AddConfigOption(new Nether\Project\Config\Option(
+if(array_key_exists('AutoloadDirectory',$realbooter->Config) && array_key_exists('StartFile',$realbooter->Config) && array_key_exists('WebDirectory',$realbooter->Config) && class_exists('Nether\\Avenue'))
+$realbooter->AddConfigOption(new Nether\Project\Config\NetherAvenue(
 	'NetherAvenue', 'y',
 	"I've detected you have Nether Avenue installed. Would you like me to create the default {$realbooter->Config['WebDirectory']->Value}/index.php file and default route settings for you? This will allow you to get rolling with creating Routes/Controllers really fast."
 ));
 
 if(array_key_exists('StartFile',$realbooter->Config) && array_key_exists('WebDirectory',$realbooter->Config) && class_exists('Nether\\Surface'))
-$realbooter->AddConfigOption(new Nether\Project\Config\Option(
+$realbooter->AddConfigOption(new Nether\Project\Config\NetherSurface(
 	'NetherSurface', 'y',
 	"I've detected you have Nether Surface installed. Would you like me to drop in the really boring default theme and setup the Surface theme engine so that you can build complete pages really fast? At that point, all you will have to do is edit the theme to look how you want."
 ));

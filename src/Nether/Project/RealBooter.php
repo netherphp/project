@@ -61,6 +61,37 @@ class RealBooter {
 		else return false;
 	}
 
+	static function CopyDirectory($olddir,$newdir) {
+
+		$iter = new \RecursiveDirectoryIterator(
+			$olddir,
+			\FilesystemIterator::SKIP_DOTS
+		);
+
+		foreach(new \RecursiveIteratorIterator($iter) as $file => $cur) {
+			$oldfile = $cur->getPathname();
+			$newfile = sprintf(
+				'%s%s%s'	,
+				$newdir,
+				DIRECTORY_SEPARATOR,
+				trim(str_replace($olddir,'',$oldfile),DIRECTORY_SEPARATOR)
+			);
+
+			$umask = umask(0);
+
+			if(!file_exists(dirname($newfile))) {
+				mkdir(dirname($newfile),0777,true);
+			}
+
+			echo "[File] Installing {$newfile}", PHP_EOL;
+			copy($oldfile,$newfile);
+
+			umask($umask);
+		}
+
+		return true;
+	}
+
 	////////////////
 	////////////////
 

@@ -17,6 +17,8 @@ class StartFile extends Option {
 			'start.php'
 		));
 
+		echo "[File] Generating {$realbooter->Config['ConfigDirectory']->Value}/start.php", PHP_EOL;
+
 		ob_start(); {{{
 			echo '<?php', PHP_EOL, PHP_EOL;
 
