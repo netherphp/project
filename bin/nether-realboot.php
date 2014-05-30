@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 
 require(sprintf(
 	'%s/autoload.php',
-	dirname(dirname(__FILE__))
+	dirname(dirname(dirname(dirname(__FILE__))))
 ));
 
 $realbooter = new Nether\Project\RealBooter;
