@@ -18,5 +18,5 @@
 			"Nether\\": "src/"
 		}
 	},
-	"bin": ["bin/nether-realboot.php"]
+	"bin": ["bin/nether-realboot"]
 }
