@@ -108,6 +108,10 @@ class StartFile extends Option {
 			$options[] = "'nether-web-path' => '/'";
 		}
 
+		if(array_key_exists('NetherSurface',$realbooter->Config)) {
+			$options[] = "'surface-theme' => 'default'";
+		}
+
 		echo "Nether\\Option::Set([", PHP_EOL;
 		echo "\t";
 		echo implode(",".PHP_EOL."\t",$options);
