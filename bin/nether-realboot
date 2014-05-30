@@ -60,6 +60,7 @@ $realbooter->AddConfigOption(new Nether\Project\Config\StartFile(
 
 if($realbooter->Confirm()) {
 	$realbooter->Execute();
+	$realbooter->Save();
 	$realbooter->End();
 } else {
 	$realbooter->Aborted();

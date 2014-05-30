@@ -87,6 +87,14 @@ class RealBooter {
 		return;
 	}
 
+	public function Save() {
+		$filepath = $this->GetFullPathTo('nether.json');
+		file_put_contents(
+			$filepath,
+			json_encode($this->Config,JSON_PRETTY_PRINT)
+		);
+	}
+
 	public function Confirm() {
 		echo PHP_EOL;
 		echo "Run with these settings?", PHP_EOL;

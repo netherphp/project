@@ -32,7 +32,7 @@ class StartFile extends Option {
 			echo PHP_EOL;
 		}}} $startdata = ob_get_clean();
 
-		file_put_contents($startfile,$startdata );
+		file_put_contents($startfile,$startdata);
 	}
 
 	protected function GenerateCommentBar() {
