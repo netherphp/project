@@ -16,12 +16,6 @@ $realbooter->AddConfigOption(new Nether\Project\Config\Directory(
 	'This is the directory you will place the namespaces for your application (and only your application) into.'
 ));
 
-if(array_key_exists('AutoloadDirectory',$realbooter->Config))
-$realbooter->AddConfigOption(new Nether\Project\Config\AutoloadNamespace(
-	'AutoloadNamespace', '',
-	'Enter a comma separated list of namespaces you would like to register for autoloading. Enter only the base namespaces for your application. For example, if you will have a class called Foo\Bar\Derp enter "Foo". This directory will then be created in the AutoloadDirectory and your composer.json will be updated to make autoloading happen.'
-));
-
 $realbooter->AddConfigOption(new Nether\Project\Config\Directory(
 	'ThirdPartyDirectory', 'share',
 	'This is the directory you will place third party libraries that you may have to manually load because they did not support composer.'
@@ -50,6 +44,18 @@ $realbooter->AddConfigOption(new Nether\Project\Config\Directory(
 $realbooter->AddConfigOption(new Nether\Project\Config\Directory(
 	'WebDirectory', 'www',
 	'This is the directory your website will be served from. You will need to configure your webserver (Apache, nginx, whatever) to point to this directory.'
+));
+
+if(array_key_exists('AutoloadDirectory',$realbooter->Config))
+$realbooter->AddConfigOption(new Nether\Project\Config\AutoloadNamespace(
+	'AutoloadNamespace', '',
+	'Enter a comma separated list of namespaces you would like to register for autoloading. Enter only the base namespaces for your application. For example, if you will have a class called Foo\Bar\Derp enter "Foo". This directory will then be created in the AutoloadDirectory and your composer.json will be updated to make autoloading happen.'
+));
+
+if(array_key_exists('ConfigDirectory',$realbooter->Config))
+$realbooter->AddConfigOption(new Nether\Project\Config\StartFile(
+	'StartFile', 'y',
+	"Would you like me to generate a {$realbooter->Config['ConfigDirectory']->Value}/start.php file for you? This file will contain the includes for composer, the PROJECT_ROOT constant, and some default settings you can tweak later. You be able to include this one file in all your scripts and get to work with your entire framework with all its settings easily. As your application grows you can modify it to handle all your bootstrapping needs. Enter y or n."
 ));
 
 if($realbooter->Confirm()) {

@@ -48,6 +48,21 @@ class RealBooter {
 	////////////////
 	////////////////
 
+	static function QueryYesOrNo() {
+		$result = false;
+
+		while(!$result) {
+			echo '[y/n]: ';
+			$result = strtolower(trim(fgets(STDIN)));
+		}
+
+		if($result === 'y') return true;
+		else return false;
+	}
+
+	////////////////
+	////////////////
+
 	public function Begin() {
 		echo PHP_EOL;
 		echo "Nether Real Booting Agent", PHP_EOL;
@@ -80,16 +95,7 @@ class RealBooter {
 			echo " - {$option->Name} = {$option->Value}", PHP_EOL;
 		}
 
-		echo PHP_EOL;
-		$response = false;
-
-		while(!$response) {
-			echo "[y/n]: ";
-			$response = trim(fgets(STDIN));
-		}
-
-		if($response === 'y') return true;
-		else return false;
+		return self::QueryYesOrNo();
 	}
 
 	public function Execute() {
