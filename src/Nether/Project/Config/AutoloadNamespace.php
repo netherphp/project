@@ -38,12 +38,12 @@ class AutoloadNamespace extends Option {
 		}
 
 		// check that it has autoload.
-		if(!array_key_exists('autoload',$composer))
+		if(!array_key_exists('autoload',$composer) || !is_array($composer['autoload']))
 		$composer['autoload'] = [];
 
 		// check that it has autoload\psr-0
-		if(!array_key_exists('psr-0',$composer['autoload']))
-		$composer['autoload']['psr-0'] = 0;
+		if(!array_key_exists('psr-0',$composer['autoload']) || !is_array($composer['autoload']['psr-0']))
+		$composer['autoload']['psr-0'] = [];
 
 		// add our autoloads to composer.
 		foreach($namespaces as $ns) {
