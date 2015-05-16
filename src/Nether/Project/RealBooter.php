@@ -1,153 +1,251 @@
 <?php
 
 namespace Nether\Project;
-
-use \Exception;
 use \Nether;
+use \Exception;
 
 class RealBooter {
 
-	public $ProjectRoot;
-	/*//
-	@type string
-	the directory this project will be built in.
-	//*/
-
-	public $Config = [];
+	public $Packages = [];
 	/*//
 	@type array
-	all the config options the user opted to act upon.
+	a list of all the packages we will attempt to install.
 	//*/
 
-	////////////////
-	////////////////
+	public $InstallerRoot;
+
+	////////////////////////////////
+	////////////////////////////////
 
 	public function __construct() {
-		$this->ProjectRoot = getcwd();
+
+		// take note of our package directory.
+		$this->InstallerRoot = dirname(dirname(dirname(dirname(__FILE__))));
+
 		return;
 	}
 
-	////////////////
-	////////////////
+	public function Finish() {
 
-	public function AddConfigOption($option) {
-		if(!$option->Use) return;
+		$this->ShowBanner("Realbooting Complete");
 
-		$this->Config[$option->Name] = $option;
+		foreach($this->Packages as $pkg)
+		$pkg->Finish($this);
+
 		return;
 	}
 
-	public function GetFullPathTo($dir) {
-		return sprintf(
-			'%s%s%s',
-			$this->ProjectRoot,
-			DIRECTORY_SEPARATOR,
-			$dir
-		);
-	}
+	////////////////////////////////
+	////////////////////////////////
 
-	////////////////
-	////////////////
+	protected $ProjectRoot;
+	/*//
+	@type string
+	the root path to the project.
+	//*/
 
-	static function QueryYesOrNo() {
-		$result = false;
+	public function GetProjectRoot() { return $this->ProjectRoot; }
+	public function SetProjectRoot($r) { $this->ProjectRoot = $r; return $this; }
 
-		while(!$result) {
-			echo '[y/n]: ';
-			$result = strtolower(trim(fgets(STDIN)));
+	////////////////////////////////
+	////////////////////////////////
+
+	public function GetComposer() {
+
+		$filepath = "{$this->ProjectRoot}/composer.json";
+
+		try { $composer = new Nether\Project\Composer($filepath); }
+		catch(Exception $e) {
+			$this->ShowMessage($e->getMessage());
+			exit(0);
 		}
 
-		if($result === 'y') return true;
-		else return false;
+		return $composer;
 	}
 
-	static function CopyDirectory($olddir,$newdir) {
+	////////////////////////////////
+	////////////////////////////////
 
-		$iter = new \RecursiveDirectoryIterator(
-			$olddir,
-			\FilesystemIterator::SKIP_DOTS
+	public function AddPackage(Nether\Project\Package $pkg) {
+		$this->Packages[$pkg->GetName()] = $pkg;
+		$pkg->SetRealBooter($this);
+		return $this;
+	}
+
+	////////////////////////////////
+	////////////////////////////////
+
+	public function PromptProjectRoot() {
+
+		$this->ShowMessage(
+		'Choose the directory to you wish to realboot this application in. By '.
+		'default the current directory is chosen, hit enter to accept.'
 		);
 
-		foreach(new \RecursiveIteratorIterator($iter) as $file => $cur) {
-			$oldfile = $cur->getPathname();
-			$newfile = sprintf(
-				'%s%s%s'	,
-				$newdir,
-				DIRECTORY_SEPARATOR,
-				trim(str_replace($olddir,'',$oldfile),DIRECTORY_SEPARATOR)
+		$this->ShowPrompt(
+			'Project Root:',
+			getcwd(),
+			[$this,'AcceptProjectRoot']
+		);
+
+		return $this;
+	}
+
+	public function AcceptProjectRoot($path) {
+
+		if(is_file($path))
+		throw new Exception('ERROR: specified path is currently a file.');
+
+		if(!is_dir($path)) {
+			$this->ShowPrompt(
+				'Directory does not exist. Create?','y',
+				function($yn) use($path){
+					if(strtolower($yn) === 'y') @mkdir($path,0777,true);
+					else exit(0);
+				}
 			);
+		}
 
-			$umask = umask(0);
+		if(!is_dir($path))
+		throw new Exception('ERROR: unable to create directory.');
 
-			if(!file_exists(dirname($newfile))) {
-				mkdir(dirname($newfile),0777,true);
+		$this->ProjectRoot = $path;
+		return;
+	}
+
+	public function PromptComposer() {
+		$this->GetComposer();
+		return $this;
+	}
+
+	public function PromptPackages() {
+
+		foreach($this->Packages as $pkg) {
+			if($pkg instanceof Nether\Project\Package\Core)
+			continue;
+
+			$pkg->Ask($this);
+
+			if(!$pkg->IsEnabled()) {
+				unset($this->Packages[$pkg->GetName()]);
+				continue;
 			}
-
-			echo "[File] Installing {$newfile}", PHP_EOL;
-			copy($oldfile,$newfile);
-
-			umask($umask);
 		}
 
-		return true;
+		return $this;
 	}
 
-	////////////////
-	////////////////
+	public function PromptConfirm() {
 
-	public function Begin() {
+		$this
+		->ShowBanner('Confirm Packages')
+		->ShowMessage('The following packages are going to be configured:');
+
+		foreach($this->Packages as $pkg) {
+			echo "\t- {$pkg->GetName()} {$pkg->GetVersion()}", PHP_EOL;
+		}
 		echo PHP_EOL;
-		echo "Nether Real Booting Agent", PHP_EOL;
-		echo "ProjectRoot: {$this->ProjectRoot}", PHP_EOL, PHP_EOL;
-		echo "Hit enter to continue.", PHP_EOL;
-		fgets(STDIN);
-		return;
-	}
 
-	public function End() {
-		echo PHP_EOL;
-		echo "Done.", PHP_EOL, PHP_EOL;
-		echo wordwrap("If you specified any autoloading namespaces you need to run composer dump-autoload to have it regenerate its magic stuff. Depending on your system can do that a few ways. Choose the way that is most like how you installed Nether to begin with.",70), PHP_EOL, PHP_EOL;
-		echo "   * php composer.phar dump-autoload", PHP_EOL;
-		echo "   * composer dump-autoload", PHP_EOL;
-		return;
-	}
-
-	public function Aborted() {
-		echo PHP_EOL;
-		echo "Aborted.", PHP_EOL, PHP_EOL;
-		return;
-	}
-
-	public function Save() {
-		$filepath = $this->GetFullPathTo('nether.json');
-		file_put_contents(
-			$filepath,
-			json_encode($this->Config,JSON_PRETTY_PRINT)
+		$this->ShowPrompt(
+			'Finish Realbooting?','y',
+			function($yn) {
+				if(strtolower($yn) === 'n') {
+					$this->ShowMessage('Realbooting canceled.');
+					exit(0);
+				}
+			}
 		);
+
+		return $this;
 	}
 
-	public function Confirm() {
-		echo PHP_EOL;
-		echo "Run with these settings?", PHP_EOL;
+	////////////////////////////////
+	////////////////////////////////
 
-		foreach($this->Config as $option) {
-			echo " - {$option->Name} = {$option->Value}", PHP_EOL;
+	public function SetupPackages() {
+
+		$halted = false;
+
+		foreach($this->Packages as $pkg) {
+			try { $pkg->Setup($this); }
+			catch(Exception $e) {
+				$this->ShowMessage($e->getMessage());
+				$halted = true;
+			}
 		}
 
-		if(defined('NETHER_PROJECT_ACCEPT_DEFAULTS')) return true;
-		else return self::QueryYesOrNo();
+		if($halted) $this->ShowMessage('Operation aborted.');
+		else $this->ShowMessage('Operation complete.');
+
+		return $this;
 	}
 
-	public function Execute() {
-		reset($this->Config);
-		echo PHP_EOL;
+	////////////////////////////////
+	////////////////////////////////
 
-		foreach($this->Config as $option) {
-			$option->Execute($this);
+	public function ShowBanner($msg) {
+	/*//
+	print a header banner to the console with a message inside it.
+	//*/
+
+		$linefill = (75 - (strlen($msg) + 4));
+		printf('%s%s%s',PHP_EOL,str_repeat('=',75),PHP_EOL);
+		printf('== %s %s%s%s',$msg,str_repeat('=',$linefill),PHP_EOL,PHP_EOL);
+		return $this;
+	}
+
+	public function ShowMessage($msg) {
+	/*//
+	print a generic message to the console.
+	//*/
+
+		echo wordwrap($msg).PHP_EOL.PHP_EOL;
+		return $this;
+	}
+
+	public function ShowPrompt($label,$value,callable $callback) {
+	/*//
+	print a prompt and wait for user input.
+	//*/
+
+		printf(
+			'%s [%s]$ ',
+			$label,
+			$value
+		);
+
+		$input = trim(fgets(STDIN));
+		if(!$input) $input = $value;
+
+		try { call_user_func_array($callback,[$input]); }
+		catch(Exception $e) {
+			$this->ShowMessage($e->getMessage());
+			$this->ShowPrompt($label,$value,$callback);
 		}
 
-		return;
+		return $this;
+	}
+
+	////////////////////////////////
+	////////////////////////////////
+
+	public function CreateProjectDirectory($dir) {
+		$filepath = "{$this->ProjectRoot}/{$dir}";
+
+		if(!file_exists($filepath)) @mkdir($filepath,0777,true);
+		if(!file_exists($filepath)) throw new Exception("unable to create {$dir}");
+
+		return $this;
+	}
+
+	public function InstallProjectFile($src,$dest) {
+		$srcpath = "{$this->InstallerRoot}/data/{$src}";
+		$destpath = "{$this->ProjectRoot}/{$dest}";
+
+		echo ">> Installing {$dest}", PHP_EOL;
+		copy($srcpath,$destpath);
+
+		return $this;
 	}
 
 }
