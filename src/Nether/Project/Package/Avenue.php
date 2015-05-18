@@ -42,7 +42,7 @@ class Avenue extends Nether\Project\Package {
 
 		$realboot
 		->CreateProjectDirectory('www')
-		->InstallProjectFile('www-index.txt','www/index.php');
+		->InstallProjectFile('Avenue/www-index.txt','www/index.php');
 
 		return $this;
 	}
@@ -51,7 +51,7 @@ class Avenue extends Nether\Project\Package {
 
 		$realboot
 		->CreateProjectDirectory('routes')
-		->InstallProjectFile('routes-home.txt','routes/Home.php')
+		->InstallProjectFile('Avenue/routes-home.txt','routes/Home.php')
 		->GetComposer()
 			->AddAutoload4("{$this->RouteNamespace}\\","{$this->RouteDirectory}/")
 			->Save();

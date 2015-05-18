@@ -72,6 +72,13 @@ class RealBooter {
 		return $this;
 	}
 
+	public function GetPackage($name) {
+		if(array_key_exists($name,$this->Packages))
+		return $this->Packages[$name];
+
+		return false;
+	}
+
 	////////////////////////////////
 	////////////////////////////////
 

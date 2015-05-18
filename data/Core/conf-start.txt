@@ -8,3 +8,6 @@ require(sprintf(
 	dirname(dirname(__FILE__))
 ));
 
+if(class_exists('Nether\Surface')) {
+	new Nether\Surface;
+}

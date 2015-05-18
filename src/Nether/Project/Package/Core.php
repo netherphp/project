@@ -24,7 +24,7 @@ class Core extends Nether\Project\Package {
 
 		$realboot
 		->CreateProjectDirectory('conf')
-		->InstallProjectFile('conf-start.txt','conf/start.php');
+		->InstallProjectFile('Core/conf-start.txt','conf/start.php');
 
 
 		return $this;

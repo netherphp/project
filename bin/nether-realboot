@@ -10,7 +10,8 @@ require(sprintf(
 
 $packages = [
 	'Nether\Project\Package\Core',
-	'Nether\Project\Package\Avenue'
+	'Nether\Project\Package\Avenue',
+	'Nether\Project\Package\Surface'
 ];
 
 ////////////////////////////////////////////////////////////////////////////////

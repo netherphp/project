@@ -54,6 +54,7 @@ class Composer {
 		$this->Data['require'] = [];
 
 		// add.
+		echo "++ Adding {$repo} {$ver} as a project requirement.", PHP_EOL;
 		$this->Data['require'][$repo] = $ver;
 		return $this;
 	}
@@ -65,6 +66,7 @@ class Composer {
 		return $this;
 
 		// remove.
+		echo "-- Removing {$repo} from project requirements.", PHP_EOL;
 		if(array_key_exists($repo,$this->Data['require']))
 		unset($this->Data['require'][$repo]);
 
