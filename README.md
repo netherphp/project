@@ -1,6 +1,6 @@
 # NetherPHP Project Foundation
 
-Things I am tired to Bootstrap.
+Things I am tired to bootstrap.
 
 ## Step 1
 
