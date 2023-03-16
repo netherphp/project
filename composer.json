@@ -1,4 +1,14 @@
 {
 	"minimum-stability": "dev",
-	"prefer-stable": true
+	"prefer-stable": true,
+	"config": {
+		"preferred-install": {
+			"netherphp/*": "source",
+			"*": "dist"
+		},
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"netherphp/composer-plugin": true
+		}
+	}
 }
