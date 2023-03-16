@@ -1,6 +1,8 @@
 # typical project wide annoyances.
 
+/env.lock
 /backups
+/logs
 /temp
 /vendor
 /www/.well-known
