@@ -1,0 +1,6 @@
+# typical project wide annoyances.
+
+/backups
+/temp
+/vendor
+/www/.well-known
