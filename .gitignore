@@ -1,5 +1,7 @@
 # typical project wide annoyances.
 
+/.phpunit.cache
+
 /env.lock
 /backups
 /logs
