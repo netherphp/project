@@ -1,0 +1,42 @@
+<?php
+
+use Nether\Atlantis;
+
+/**
+ * @var Atlantis\Struct\DropdownMenu $Links
+ */
+
+?>
+
+<div class="position-absolutely">
+	<div class="pos-absolute pos-v-center w-100">
+
+		<div class="container">
+			<div class="row">
+				<div class="col-12 col-md-6 col-lg-4">
+
+<div class="mb-4">
+	<div class="tw-none">
+		<span class="text-primary">Bob Majdak Jr</span>
+		<span class="text-primary" style="filter:saturate(0.20);">// bobmagicii</span>
+	</div>
+	<div>
+		PHP Web Developer
+	</div>
+</div>
+
+<?php foreach($Links->Items as $Key => $Link): /** @var Atlantis\Struct\DropdownItem $Link */ ?>
+<div class="<?php $Util->Print($Links->Items->IsLastKey($Key) ? 'mb-0' : 'mb-2') ?>">
+	<a rel="me" href="<?php $Util->Print($Link->GetURL()) ?>" class="btn btn-block btn-primary ta-left">
+		<i class="<?php $Util->Print($Link->GetIcon()) ?>"></i>
+		<?php $Util->Print($Link->GetTitle()) ?>
+	</a>
+</div>
+<?php endforeach; unset($Key, $Link); ?>
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
